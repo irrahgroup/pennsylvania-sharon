@@ -1,0 +1,17 @@
+node_modules/
+dist/
+*.tgz
+
+.env
+.env.*
+.ENV
+.ENV.*
+
+npm-debug.log*
+.DS_Store
+.idea/
+.vscode/
+
+# Local development references and test workflows
+docs/
+workflows/hubmessage-template-visual-tests.json

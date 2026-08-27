@@ -1,0 +1,65 @@
+{
+	"name": "n8n-nodes-hubmessage",
+	"version": "0.1.0",
+	"description": "n8n community node for the HubMessage API.",
+	"license": "MIT",
+	"author": {
+		"name": "Irrah Tech",
+		"email": "arquitetura@z-api.io"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/irrahgroup/pennsylvania-sharon.git"
+	},
+	"homepage": "https://github.com/irrahgroup/pennsylvania-sharon#readme",
+	"bugs": {
+		"url": "https://github.com/irrahgroup/pennsylvania-sharon/issues"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"hubmessage",
+		"whatsapp"
+	],
+	"type": "commonjs",
+	"main": "dist/nodes/HubMessage/HubMessage.node.js",
+	"scripts": {
+		"build": "n8n-node build",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"test": "npm run build && node --test tests/*.test.cjs",
+		"release": "n8n-node release",
+		"prepublishOnly": "npm test && n8n-node prerelease"
+	},
+	"files": [
+		"dist",
+		"workflows/hubmessage-all-operations-test.json",
+		"LICENSE",
+		"README.md"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"nodes": [
+			"dist/nodes/HubMessage/HubMessage.node.js"
+		],
+		"credentials": [
+			"dist/credentials/HubMessageApi.credentials.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "0.40.3",
+		"@types/node": "^24.0.0",
+		"eslint": "9.29.0",
+		"n8n-workflow": "2.31.3",
+		"typescript": "^5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
