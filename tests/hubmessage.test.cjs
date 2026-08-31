@@ -25,7 +25,7 @@ function normalizeParameters(rawParameters, description, itemIndex) {
 	const node = {
 		id: `hubmessage-test-node-${itemIndex}`,
 		name: 'HubMessage',
-		type: 'n8n-nodes-hubmessage.hubMessage',
+		type: '@zapi-omni/n8n-nodes-hubmessage.hubMessage',
 		typeVersion: 1,
 		position: [0, 0],
 		parameters: rawParameters,
@@ -372,7 +372,7 @@ test('visual message fields pass n8n parameter validation', () => {
 			{
 				id: 'hubmessage-test-node',
 				name: 'HubMessage',
-				type: 'n8n-nodes-hubmessage.hubMessage',
+				type: '@zapi-omni/n8n-nodes-hubmessage.hubMessage',
 				typeVersion: 1,
 				position: [0, 0],
 				parameters,

@@ -48,7 +48,7 @@ function assertNoParameterDrift(savedValue, normalizedValue, parameterPath) {
 test('all-operations workflow is valid, complete, and safe by default', () => {
 	const workflow = JSON.parse(readFileSync(workflowPath, 'utf8'));
 	const hubMessageNodes = workflow.nodes.filter(
-		(node) => node.type === 'n8n-nodes-hubmessage.hubMessage',
+		(node) => node.type === '@zapi-omni/n8n-nodes-hubmessage.hubMessage',
 	);
 	const operations = hubMessageNodes.map((node) => [
 		node.parameters.resource,

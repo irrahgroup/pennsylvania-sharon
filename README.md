@@ -1,4 +1,4 @@
-# n8n-nodes-hubmessage
+# @zapi-omni/n8n-nodes-hubmessage
 
 Community node for using the [HubMessage API](https://developer.hubmessage.io/) in n8n.
 It creates and connects WhatsApp channels, sends nine message types, and manages Meta
@@ -10,7 +10,7 @@ In a self-hosted n8n instance, open **Settings → Community Nodes**, select
 **Install**, and enter:
 
 ```text
-n8n-nodes-hubmessage
+@zapi-omni/n8n-nodes-hubmessage
 ```
 
 Restart n8n after installing or updating the package. This package is developed and
