@@ -38,7 +38,6 @@
 	},
 	"files": [
 		"dist",
-		"workflows/hubmessage-all-operations-test.json",
 		"LICENSE",
 		"README.md"
 	],

@@ -94,13 +94,6 @@ with a connected Meta channel. HubMessage confirmed that it was investigating th
 backend behavior. Until a production fix is confirmed, an empty **Get Many WABAs**
 result may reflect this known limitation rather than a credential permission issue.
 
-## Example workflow
-
-The package includes `workflows/hubmessage-all-operations-test.json`, containing all
-17 operations. Its HubMessage nodes are disabled by default to prevent accidental
-channel changes or message sends. After importing it, assign your own credential,
-complete the **Config** node, and enable one operation at a time.
-
 ## Development
 
 ```bash
