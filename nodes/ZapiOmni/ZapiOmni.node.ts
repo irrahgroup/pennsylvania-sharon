@@ -21,10 +21,10 @@ import {
 	templateProperties,
 } from './resources';
 import type {
-	HubMessageChannelOperation,
-	HubMessageMessageOperation,
-	HubMessageResource,
-	HubMessageTemplateOperation,
+	ZapiOmniChannelOperation,
+	ZapiOmniMessageOperation,
+	ZapiOmniResource,
+	ZapiOmniTemplateOperation,
 } from './types';
 
 function formatContinueOnFailError(error: unknown): IDataObject {
@@ -35,26 +35,23 @@ function formatContinueOnFailError(error: unknown): IDataObject {
 	return { error: String(error) };
 }
 
-export class HubMessage implements INodeType {
+export class ZapiOmni implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'HubMessage',
-		name: 'hubMessage',
-		icon: {
-			light: 'file:../../icons/hubmessage.svg',
-			dark: 'file:../../icons/hubmessage.dark.svg',
-		},
+		displayName: 'Z-API Omni',
+		name: 'zapiOmni',
+		icon: 'file:../../icons/zapi-omni.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{ $parameter["operation"] || $parameter["resource"] }}',
-		description: 'Interact with the HubMessage API',
+		description: 'Interact with the Z-API Omni API',
 		defaults: {
-			name: 'HubMessage',
+			name: 'Z-API Omni',
 		},
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
-				name: 'hubMessageApi',
+				name: 'zapiOmniApi',
 				required: true,
 			},
 		],
@@ -69,7 +66,7 @@ export class HubMessage implements INodeType {
 					{
 						name: 'Channel',
 						value: 'channel',
-						description: 'Create and manage HubMessage channels',
+						description: 'Create and manage Z-API Omni channels',
 					},
 					{
 						name: 'Message',
@@ -110,13 +107,13 @@ export class HubMessage implements INodeType {
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
-				const resource = this.getNodeParameter('resource', itemIndex) as HubMessageResource;
+				const resource = this.getNodeParameter('resource', itemIndex) as ZapiOmniResource;
 
 				if (resource === 'channel') {
 					const operation = this.getNodeParameter(
 						'operation',
 						itemIndex,
-					) as HubMessageChannelOperation;
+					) as ZapiOmniChannelOperation;
 					const results = await executeChannel.call(this, itemIndex, operation);
 					returnData.push(
 						...results.map((result) => ({
@@ -131,7 +128,7 @@ export class HubMessage implements INodeType {
 					const operation = this.getNodeParameter(
 						'operation',
 						itemIndex,
-					) as HubMessageMessageOperation;
+					) as ZapiOmniMessageOperation;
 					const result = await executeMessage.call(this, itemIndex, operation);
 					returnData.push({
 						json: result,
@@ -144,7 +141,7 @@ export class HubMessage implements INodeType {
 					const operation = this.getNodeParameter(
 						'operation',
 						itemIndex,
-					) as HubMessageTemplateOperation;
+					) as ZapiOmniTemplateOperation;
 					const results = await executeTemplate.call(this, itemIndex, operation);
 					returnData.push(
 						...results.map((result) => ({

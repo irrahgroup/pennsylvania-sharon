@@ -1,7 +1,7 @@
 {
 	"name": "@zapi-omni/n8n-nodes-hubmessage",
-	"version": "0.2.0",
-	"description": "n8n community node for the HubMessage API.",
+	"version": "0.3.0",
+	"description": "n8n community node for the Z-API Omni API.",
 	"license": "MIT",
 	"author": {
 		"name": "Irrah Tech",
@@ -22,11 +22,12 @@
 	"keywords": [
 		"n8n-community-node-package",
 		"n8n",
-		"hubmessage",
+		"zapi-omni",
+		"z-api",
 		"whatsapp"
 	],
 	"type": "commonjs",
-	"main": "dist/nodes/HubMessage/HubMessage.node.js",
+	"main": "dist/nodes/ZapiOmni/ZapiOmni.node.js",
 	"scripts": {
 		"build": "n8n-node build",
 		"dev": "n8n-node dev",
@@ -45,10 +46,10 @@
 		"n8nNodesApiVersion": 1,
 		"strict": true,
 		"nodes": [
-			"dist/nodes/HubMessage/HubMessage.node.js"
+			"dist/nodes/ZapiOmni/ZapiOmni.node.js"
 		],
 		"credentials": [
-			"dist/credentials/HubMessageApi.credentials.js"
+			"dist/credentials/ZapiOmniApi.credentials.js"
 		]
 	},
 	"devDependencies": {

@@ -8,12 +8,12 @@ import type {
 import { NodeOperationError } from 'n8n-workflow';
 
 import { templateLanguageOptions } from '../../TemplateLanguages';
-import { hubMessageApiRequest } from '../../transport/HubMessageApiRequest';
-import type { HubMessageTemplateOperation } from '../../types';
+import { zapiOmniApiRequest } from '../../transport/ZapiOmniApiRequest';
+import type { ZapiOmniTemplateOperation } from '../../types';
 
 const BUSINESSES_ENDPOINT = '/whatsapp/businesses';
 
-const operationsWithWaba: HubMessageTemplateOperation[] = [
+const operationsWithWaba: ZapiOmniTemplateOperation[] = [
 	'create',
 	'delete',
 	'getMany',
@@ -21,8 +21,8 @@ const operationsWithWaba: HubMessageTemplateOperation[] = [
 	'update',
 ];
 
-const operationsWithTemplateBody: HubMessageTemplateOperation[] = ['create', 'update'];
-const operationsWithTemplateId: HubMessageTemplateOperation[] = ['delete', 'update'];
+const operationsWithTemplateBody: ZapiOmniTemplateOperation[] = ['create', 'update'];
+const operationsWithTemplateId: ZapiOmniTemplateOperation[] = ['delete', 'update'];
 
 export const templateProperties: INodeProperties[] = [
 	{
@@ -682,7 +682,7 @@ async function requestBusinesses(
 	context: IExecuteFunctions | ILoadOptionsFunctions,
 	itemIndex = 0,
 ): Promise<IDataObject[]> {
-	const response = await hubMessageApiRequest.call(
+	const response = await zapiOmniApiRequest.call(
 		context,
 		'GET',
 		BUSINESSES_ENDPOINT,
@@ -700,7 +700,7 @@ async function requestTemplates(
 	wabaId: string,
 	itemIndex: number,
 ): Promise<IDataObject[]> {
-	const response = await hubMessageApiRequest.call(
+	const response = await zapiOmniApiRequest.call(
 		context,
 		'GET',
 		`/whatsapp/businesses/${encodeURIComponent(wabaId)}/templates`,
@@ -1279,7 +1279,7 @@ function getTemplatesEndpoint(wabaId: string): string {
 export async function executeTemplate(
 	this: IExecuteFunctions,
 	itemIndex: number,
-	operation: HubMessageTemplateOperation,
+	operation: ZapiOmniTemplateOperation,
 ): Promise<IDataObject[]> {
 	if (operation === 'getManyBusinesses') {
 		return await requestBusinesses(this, itemIndex);
@@ -1289,7 +1289,7 @@ export async function executeTemplate(
 	const templatesEndpoint = getTemplatesEndpoint(wabaId);
 
 	if (operation === 'create') {
-		const response = await hubMessageApiRequest.call(
+		const response = await zapiOmniApiRequest.call(
 			this,
 			'POST',
 			templatesEndpoint,
@@ -1304,7 +1304,7 @@ export async function executeTemplate(
 	}
 
 	if (operation === 'sync') {
-		const response = await hubMessageApiRequest.call(
+		const response = await zapiOmniApiRequest.call(
 			this,
 			'POST',
 			`${templatesEndpoint}/sync`,
@@ -1316,7 +1316,7 @@ export async function executeTemplate(
 	if (operation === 'delete') {
 		const templateId = getRequiredString(this, 'templateId', itemIndex, 'Template ID');
 		const endpoint = `${templatesEndpoint}/${encodeURIComponent(templateId)}`;
-		const response = await hubMessageApiRequest.call(
+		const response = await zapiOmniApiRequest.call(
 			this,
 			'DELETE',
 			endpoint,
@@ -1334,7 +1334,7 @@ export async function executeTemplate(
 			itemIndex,
 		);
 		const endpoint = `${templatesEndpoint}/${encodeURIComponent(templateId)}`;
-		const response = await hubMessageApiRequest.call(
+		const response = await zapiOmniApiRequest.call(
 			this,
 			'PUT',
 			endpoint,

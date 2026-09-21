@@ -1,0 +1,19 @@
+{
+	"node": "@zapi-omni/n8n-nodes-hubmessage.zapiOmni",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Communication"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://developer.omni.z-api.io/authentication"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://developer.omni.z-api.io/"
+			}
+		]
+	},
+	"alias": ["Z-API Omni", "Zapi Omni", "Z-API", "Omni", "WhatsApp"]
+}

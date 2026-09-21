@@ -1,8 +1,8 @@
-export type HubMessageResource = 'channel' | 'message' | 'template';
+export type ZapiOmniResource = 'channel' | 'message' | 'template';
 
-export type HubMessageChannelOperation = 'connect' | 'create';
+export type ZapiOmniChannelOperation = 'connect' | 'create';
 
-export type HubMessageMessageOperation =
+export type ZapiOmniMessageOperation =
 	| 'sendAudio'
 	| 'sendContact'
 	| 'sendImage'
@@ -13,7 +13,7 @@ export type HubMessageMessageOperation =
 	| 'sendText'
 	| 'sendVideo';
 
-export type HubMessageTemplateOperation =
+export type ZapiOmniTemplateOperation =
 	| 'create'
 	| 'delete'
 	| 'getMany'

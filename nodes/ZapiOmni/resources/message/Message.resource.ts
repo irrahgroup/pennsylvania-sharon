@@ -2,10 +2,10 @@ import type { IDataObject, IExecuteFunctions, INodeProperties } from 'n8n-workfl
 import { NodeOperationError } from 'n8n-workflow';
 
 import { templateLanguageOptions } from '../../TemplateLanguages';
-import type { HubMessageMessageOperation } from '../../types';
-import { hubMessageApiRequest } from '../../transport/HubMessageApiRequest';
+import type { ZapiOmniMessageOperation } from '../../types';
+import { zapiOmniApiRequest } from '../../transport/ZapiOmniApiRequest';
 
-const allMessageOperations: HubMessageMessageOperation[] = [
+const allMessageOperations: ZapiOmniMessageOperation[] = [
 	'sendAudio',
 	'sendContact',
 	'sendImage',
@@ -17,7 +17,7 @@ const allMessageOperations: HubMessageMessageOperation[] = [
 	'sendVideo',
 ];
 
-const mediaMessageOperations: HubMessageMessageOperation[] = [
+const mediaMessageOperations: ZapiOmniMessageOperation[] = [
 	'sendAudio',
 	'sendImage',
 	'sendSticker',
@@ -100,7 +100,7 @@ export const messageProperties: INodeProperties[] = [
 		default: '',
 		required: true,
 		placeholder: 'YOUR_CHANNEL_ID',
-		description: 'ID of the connected HubMessage channel used to send the message',
+		description: 'ID of the connected Z-API Omni channel used to send the message',
 		displayOptions: {
 			show: {
 				resource: ['message'],
@@ -317,7 +317,7 @@ export const messageProperties: INodeProperties[] = [
 						type: 'string',
 						default: '',
 						required: true,
-						placeholder: 'https://www.hubmessage.io',
+						placeholder: 'https://omni.z-api.io',
 						description: 'HTTP or HTTPS URL opened by this button',
 						displayOptions: {
 							show: {
@@ -329,7 +329,7 @@ export const messageProperties: INodeProperties[] = [
 			},
 		],
 		description:
-			'Action buttons displayed to the recipient; the HubMessage documentation does not declare a maximum count',
+			'Action buttons displayed to the recipient; the Z-API Omni documentation does not declare a maximum count',
 		displayOptions: {
 			show: {
 				resource: ['message'],
@@ -343,9 +343,9 @@ export const messageProperties: INodeProperties[] = [
 		name: 'actionButtons',
 		type: 'json',
 		default:
-			'[\n  {\n    "id": "1",\n    "title": "Visit our site",\n    "name": "URL",\n    "url": "https://www.hubmessage.io"\n  }\n]',
+			'[\n  {\n    "id": "1",\n    "title": "Visit our site",\n    "name": "URL",\n    "url": "https://omni.z-api.io"\n  }\n]',
 		required: true,
-		description: 'JSON array of URL or CALL buttons following the HubMessage API schema',
+		description: 'JSON array of URL or CALL buttons following the Z-API Omni API schema',
 		displayOptions: {
 			show: {
 				resource: ['message'],
@@ -457,7 +457,7 @@ export const messageProperties: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				placeholder: 'image/png',
-				description: 'MIME type accepted by HubMessage when Thumbnail MIME Type is Custom',
+				description: 'MIME type accepted by Z-API Omni when Thumbnail MIME Type is Custom',
 			},
 			{
 				displayName: 'Thumbnail MIME Type',
@@ -1004,7 +1004,7 @@ export const messageProperties: INodeProperties[] = [
 		type: 'json',
 		default: '[\n  {\n    "type": "body",\n    "parameters": []\n  }\n]',
 		required: true,
-		description: 'Complete template components and parameters following the HubMessage API schema',
+		description: 'Complete template components and parameters following the Z-API Omni API schema',
 		displayOptions: {
 			show: {
 				resource: ['message'],
@@ -1019,7 +1019,7 @@ export const messageProperties: INodeProperties[] = [
 		type: 'json',
 		default: '[\n  {\n    "type": "body",\n    "parameters": []\n  }\n]',
 		required: true,
-		description: 'Template components and their parameters, following the HubMessage API schema',
+		description: 'Template components and their parameters, following the Z-API Omni API schema',
 		displayOptions: {
 			show: {
 				resource: ['message'],
@@ -1156,7 +1156,7 @@ async function sendMessage(
 	content: IDataObject,
 ): Promise<IDataObject> {
 	const { channelId, recipient } = getMessageTarget(context, itemIndex);
-	return (await hubMessageApiRequest.call(
+	return (await zapiOmniApiRequest.call(
 		context,
 		'POST',
 		`/v1/channels/${encodeURIComponent(channelId)}/messages`,
@@ -1808,7 +1808,7 @@ async function sendInteractiveButton(
 export async function executeMessage(
 	this: IExecuteFunctions,
 	itemIndex: number,
-	operation: HubMessageMessageOperation,
+	operation: ZapiOmniMessageOperation,
 ): Promise<IDataObject> {
 	if (operation === 'sendAudio') {
 		return await sendMedia(this, itemIndex, 'AUDIO');

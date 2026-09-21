@@ -5,8 +5,8 @@ import type {
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 
-import { hubMessageApiRequest } from '../../transport/HubMessageApiRequest';
-import type { HubMessageChannelOperation } from '../../types';
+import { zapiOmniApiRequest } from '../../transport/ZapiOmniApiRequest';
+import type { ZapiOmniChannelOperation } from '../../types';
 
 const CHANNELS_ENDPOINT = '/v1/channels';
 
@@ -33,13 +33,13 @@ export const channelProperties: INodeProperties[] = [
 				name: 'Create',
 				value: 'create',
 				action: 'Create a channel',
-				description: 'Create a new HubMessage channel',
+				description: 'Create a new Z-API Omni channel',
 			},
 		],
 	},
 	{
 		displayName:
-			'Use the <a href="https://developer.hubmessage.io/channels/connect-channel" target="_blank">HubMessage Connect SDK</a> first to obtain the WABA ID, Phone ID, authorization code, and coexistence value',
+			'Use the <a href="https://developer.omni.z-api.io/channels/connect-channel" target="_blank">Z-API Omni Connect SDK</a> first to obtain the WABA ID, Phone ID, authorization code, and coexistence value',
 		name: 'connectSdkNotice',
 		type: 'notice',
 		default: '',
@@ -127,7 +127,7 @@ export const channelProperties: INodeProperties[] = [
 		default: '',
 		required: true,
 		placeholder: 'Sales WhatsApp',
-		description: 'Name used to identify the channel in HubMessage',
+		description: 'Name used to identify the channel in Z-API Omni',
 		displayOptions: {
 			show: {
 				resource: ['channel'],
@@ -178,7 +178,7 @@ async function createChannel(
 	const name = getRequiredString(context, 'name', itemIndex, 'Name');
 	const type = getRequiredString(context, 'channelType', itemIndex, 'Type');
 
-	return (await hubMessageApiRequest.call(context, 'POST', CHANNELS_ENDPOINT, itemIndex, {
+	return (await zapiOmniApiRequest.call(context, 'POST', CHANNELS_ENDPOINT, itemIndex, {
 		name,
 		type,
 	})) as IDataObject;
@@ -194,7 +194,7 @@ async function connectChannel(
 	const code = getRequiredString(context, 'code', itemIndex, 'Authorization Code');
 	const coexistence = context.getNodeParameter('coexistence', itemIndex, false) as boolean;
 
-	return (await hubMessageApiRequest.call(
+	return (await zapiOmniApiRequest.call(
 		context,
 		'POST',
 		`/v1/channels/${encodeURIComponent(channelId)}/connect`,
@@ -211,7 +211,7 @@ async function connectChannel(
 export async function executeChannel(
 	this: IExecuteFunctions,
 	itemIndex: number,
-	operation: HubMessageChannelOperation,
+	operation: ZapiOmniChannelOperation,
 ): Promise<IDataObject[]> {
 	if (operation === 'connect') {
 		return [await connectChannel(this, itemIndex)];

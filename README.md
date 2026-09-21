@@ -1,8 +1,20 @@
 # @zapi-omni/n8n-nodes-hubmessage
 
-Community node for using the [HubMessage API](https://developer.hubmessage.io/) in n8n.
+Community node for using the [Z-API Omni API](https://developer.omni.z-api.io/) in n8n.
 It creates and connects WhatsApp channels, sends nine message types, and manages Meta
 message templates.
+
+## Upgrading from 0.2.x
+
+This release renames the node and its credential internally, and moves to the
+`api.omni.z-api.io` host. Neither is migrated automatically:
+
+- Re-create the **Z-API Omni API** credential and enter the Secret Key again. The
+  new default Base URL is already correct.
+- Re-add the node in existing workflows and reconnect it. Workflows saved with 0.2.x
+  will show the old node as unrecognized.
+
+The npm package name is unchanged, so the install string below still applies.
 
 ## Installation
 
@@ -18,10 +30,10 @@ tested against n8n 2.x.
 
 ## Credentials
 
-Create a **HubMessage API** credential with:
+Create a **Z-API Omni API** credential with:
 
-- **Base URL:** `https://api.hubmessage.io`;
-- **Secret Key:** generated in the HubMessage Security panel.
+- **Base URL:** `https://api.omni.z-api.io`;
+- **Secret Key:** generated in the Z-API Omni Security panel.
 
 The node sends the key as a Bearer token. Credential validation uses the official,
 read-only `GET /whatsapp/businesses` endpoint.
@@ -33,7 +45,7 @@ read-only `GET /whatsapp/businesses` endpoint.
 - **Create:** creates a `META_WHATSAPP` channel with `POST /v1/channels`.
 - **Connect:** completes the Meta connection with
   `POST /v1/channels/{channelId}/connect` using the values returned by the
-  HubMessage Connect SDK.
+  Z-API Omni Connect SDK.
 
 ### Message
 
@@ -49,7 +61,7 @@ All message operations send through `POST /v1/channels/{channelId}/messages`:
 - Send Template;
 - Send Video.
 
-Enter the HubMessage **Channel ID** manually. Expressions are supported. Free-form
+Enter the Z-API Omni **Channel ID** manually. Expressions are supported. Free-form
 messages require an open WhatsApp 24-hour conversation window; outside that window,
 send an approved template first.
 
@@ -61,11 +73,11 @@ advanced expressions.
 Contact phone numbers can be entered with a visual list or as a comma-separated list.
 Common formatting characters such as `+`, spaces, parentheses, dots, and hyphens are
 removed before the number is sent. The node requires digits after normalization and
-enforces only the E.164 maximum of 15 digits; HubMessage remains responsible for
+enforces only the E.164 maximum of 15 digits; Z-API Omni remains responsible for
 validating whether the complete DDI + DDD + number is routable.
 
 Thumbnail media type provides the documented JPEG and MP4 suggestions plus a Custom
-option for other MIME types accepted by HubMessage. When a Thumbnail URL is added,
+option for other MIME types accepted by Z-API Omni. When a Thumbnail URL is added,
 Thumbnail MIME Type must also be added. Custom values must use the `type/subtype`
 format, for example `image/png`. Template components remain JSON because Meta's
 component schema varies by template type.
@@ -90,7 +102,7 @@ items; enable n8n's **Always Output Data** setting when the following branch mus
 for an empty list. `Sync` returns the complete synchronization response as one item.
 
 During integration testing, `GET /whatsapp/businesses` returned an empty list even
-with a connected Meta channel. HubMessage confirmed that it was investigating the
+with a connected Meta channel. Z-API Omni confirmed that it was investigating the
 backend behavior. Until a production fix is confirmed, an empty **Get Many WABAs**
 result may reflect this known limitation rather than a credential permission issue.
 
@@ -103,7 +115,7 @@ npm test
 ```
 
 Methods, paths, and payloads are validated against the official documentation at
-[developer.hubmessage.io](https://developer.hubmessage.io/).
+[developer.omni.z-api.io](https://developer.omni.z-api.io/).
 
 ## License
 

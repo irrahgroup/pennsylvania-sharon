@@ -3,14 +3,14 @@ const test = require('node:test');
 
 const { NodeHelpers } = require('n8n-workflow');
 
-const { HubMessageApi } = require('../dist/credentials/HubMessageApi.credentials.js');
-const { HubMessage } = require('../dist/nodes/HubMessage/HubMessage.node.js');
+const { ZapiOmniApi } = require('../dist/credentials/ZapiOmniApi.credentials.js');
+const { ZapiOmni } = require('../dist/nodes/ZapiOmni/ZapiOmni.node.js');
 const {
 	executeChannel,
-} = require('../dist/nodes/HubMessage/resources/channel/Channel.resource.js');
+} = require('../dist/nodes/ZapiOmni/resources/channel/Channel.resource.js');
 const {
 	executeMessage,
-} = require('../dist/nodes/HubMessage/resources/message/Message.resource.js');
+} = require('../dist/nodes/ZapiOmni/resources/message/Message.resource.js');
 const {
 	executeTemplate,
 	extractBusinesses,
@@ -18,14 +18,14 @@ const {
 	loadBusinessOptions,
 	loadMessageTemplateOptions,
 	loadTemplateOptions,
-} = require('../dist/nodes/HubMessage/resources/template/Template.resource.js');
+} = require('../dist/nodes/ZapiOmni/resources/template/Template.resource.js');
 
 
 function normalizeParameters(rawParameters, description, itemIndex) {
 	const node = {
-		id: `hubmessage-test-node-${itemIndex}`,
-		name: 'HubMessage',
-		type: '@zapi-omni/n8n-nodes-hubmessage.hubMessage',
+		id: `zapi-omni-test-node-${itemIndex}`,
+		name: 'ZapiOmni',
+		type: '@zapi-omni/n8n-nodes-hubmessage.zapiOmni',
 		typeVersion: 1,
 		position: [0, 0],
 		parameters: rawParameters,
@@ -46,7 +46,7 @@ function normalizeParameters(rawParameters, description, itemIndex) {
 }
 
 function createContext(rawParametersOrItems, requestHandler) {
-	const description = new HubMessage().description;
+	const description = new ZapiOmni().description;
 	const rawParameterItems = Array.isArray(rawParametersOrItems)
 		? rawParametersOrItems
 		: [rawParametersOrItems];
@@ -67,9 +67,9 @@ function createContext(rawParametersOrItems, requestHandler) {
 			return normalizedItems[0].parameters[name];
 		},
 		async getCredentials(name) {
-			assert.equal(name, 'hubMessageApi');
+			assert.equal(name, 'zapiOmniApi');
 			return {
-				baseUrl: 'https://api.hubmessage.io/',
+				baseUrl: 'https://api.omni.z-api.io/',
 				secretKey: 'test-secret',
 			};
 		},
@@ -97,7 +97,7 @@ function createExecuteContext(rawParameters, recipients, requestHandler, continu
 }
 
 test('resource selector is separated into Channel, Message, and Template', () => {
-	const description = new HubMessage().description;
+	const description = new ZapiOmni().description;
 	const resource = description.properties.find((property) => property.name === 'resource');
 
 	assert.ok(resource);
@@ -189,15 +189,15 @@ test('resource selector is separated into Channel, Message, and Template', () =>
 });
 
 test('credential defaults to the official production API', () => {
-	const credential = new HubMessageApi();
+	const credential = new ZapiOmniApi();
 	const baseUrl = credential.properties.find((property) => property.name === 'baseUrl');
 
-	assert.equal(baseUrl.default, 'https://api.hubmessage.io');
+	assert.equal(baseUrl.default, 'https://api.omni.z-api.io');
 	assert.equal(credential.test.request.baseURL, '={{$credentials.baseUrl}}');
 });
 
 test('message fields provide visual editors and advanced input modes', () => {
-	const properties = new HubMessage().description.properties;
+	const properties = new ZapiOmni().description.properties;
 	const actionButtonsMode = properties.find(
 		(property) => property.name === 'actionButtonsInputMode',
 	);
@@ -310,7 +310,7 @@ test('message fields provide visual editors and advanced input modes', () => {
 });
 
 test('visual message fields pass n8n parameter validation', () => {
-	const description = new HubMessage().description;
+	const description = new ZapiOmni().description;
 	const samples = [
 		{
 			resource: 'message',
@@ -370,9 +370,9 @@ test('visual message fields pass n8n parameter validation', () => {
 		const issues = NodeHelpers.getNodeParametersIssues(
 			description.properties,
 			{
-				id: 'hubmessage-test-node',
-				name: 'HubMessage',
-				type: '@zapi-omni/n8n-nodes-hubmessage.hubMessage',
+				id: 'zapi-omni-test-node',
+				name: 'ZapiOmni',
+				type: '@zapi-omni/n8n-nodes-hubmessage.zapiOmni',
 				typeVersion: 1,
 				position: [0, 0],
 				parameters,
@@ -461,7 +461,7 @@ test('Template Get Many WABAs calls the documented endpoint', async () => {
 	const result = await executeTemplate.call(context, 0, 'getManyBusinesses');
 
 	assert.equal(capturedOptions.method, 'GET');
-	assert.equal(capturedOptions.url, 'https://api.hubmessage.io/whatsapp/businesses');
+	assert.equal(capturedOptions.url, 'https://api.omni.z-api.io/whatsapp/businesses');
 	assert.equal(capturedOptions.headers['Content-Type'], undefined);
 	assert.deepEqual(result, businesses);
 });
@@ -505,7 +505,7 @@ test('Template Get Many extracts data from the documented response envelope', as
 	assert.equal(capturedOptions.method, 'GET');
 	assert.equal(
 		capturedOptions.url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba%2Fwith%20spaces/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba%2Fwith%20spaces/templates',
 	);
 	assert.deepEqual(result, templates);
 });
@@ -572,18 +572,18 @@ test('Template Create and Update use the documented payload and preserve the sel
 	assert.equal(requests[0].headers['Content-Type'], 'application/json');
 	assert.equal(
 		requests[0].url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates',
 	);
 	assert.deepEqual(requests[0].body, expectedBody);
 	assert.equal(requests[1].method, 'GET');
 	assert.equal(
 		requests[1].url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates',
 	);
 	assert.equal(requests[2].method, 'PUT');
 	assert.equal(
 		requests[2].url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates/template%2F1',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates/template%2F1',
 	);
 	assert.deepEqual(requests[2].body, expectedBody);
 });
@@ -693,13 +693,13 @@ test('Template Delete and Sync use their documented endpoints', async () => {
 	assert.equal(requests[0].headers['Content-Type'], undefined);
 	assert.equal(
 		requests[0].url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates/template-1',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates/template-1',
 	);
 	assert.equal(requests[0].body, undefined);
 	assert.equal(requests[1].method, 'POST');
 	assert.equal(
 		requests[1].url,
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates/sync',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates/sync',
 	);
 });
 
@@ -756,8 +756,8 @@ test('Template dropdowns load and sort WABAs and templates', async () => {
 	);
 	assert.match(templateOptions[0].description, /APPROVED/);
 	assert.deepEqual(requestedUrls, [
-		'https://api.hubmessage.io/whatsapp/businesses',
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates',
 	]);
 });
 
@@ -849,9 +849,9 @@ test('Send Template dropdown loads template names from every WABA and disables u
 	);
 	assert.match(options[0].description, /Sales.*WABA waba-1.*template-1.*UTILITY/);
 	assert.deepEqual(new Set(requestedUrls), new Set([
-		'https://api.hubmessage.io/whatsapp/businesses',
-		'https://api.hubmessage.io/whatsapp/businesses/waba-1/templates',
-		'https://api.hubmessage.io/whatsapp/businesses/waba-2/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-1/templates',
+		'https://api.omni.z-api.io/whatsapp/businesses/waba-2/templates',
 	]));
 });
 
@@ -902,7 +902,7 @@ test('Channel Connect calls the documented endpoint and payload', async () => {
 	assert.equal(capturedOptions.method, 'POST');
 	assert.equal(
 		capturedOptions.url,
-		'https://api.hubmessage.io/v1/channels/channel%2Fwith%20spaces/connect',
+		'https://api.omni.z-api.io/v1/channels/channel%2Fwith%20spaces/connect',
 	);
 	assert.deepEqual(capturedOptions.body, {
 		wabaId: '428083093730937',
@@ -931,7 +931,7 @@ test('Channel Create calls the documented endpoint and payload', async () => {
 	const result = await executeChannel.call(context, 0, 'create');
 
 	assert.equal(capturedOptions.method, 'POST');
-	assert.equal(capturedOptions.url, 'https://api.hubmessage.io/v1/channels');
+	assert.equal(capturedOptions.url, 'https://api.omni.z-api.io/v1/channels');
 	assert.deepEqual(capturedOptions.body, {
 		name: 'Sales WhatsApp',
 		type: 'META_WHATSAPP',
@@ -959,11 +959,11 @@ test('Send Text calls the documented endpoint with the documented payload', asyn
 
 	const result = await executeMessage.call(context, 0, 'sendText');
 
-	assert.equal(capturedCredentialName, 'hubMessageApi');
+	assert.equal(capturedCredentialName, 'zapiOmniApi');
 	assert.equal(capturedOptions.method, 'POST');
 	assert.equal(
 		capturedOptions.url,
-		'https://api.hubmessage.io/v1/channels/channel%2Fwith%20spaces/messages',
+		'https://api.omni.z-api.io/v1/channels/channel%2Fwith%20spaces/messages',
 	);
 	assert.deepEqual(capturedOptions.body, {
 		recipient: {
@@ -997,7 +997,7 @@ test('node execute preserves paired items and continues after a per-item validat
 		true,
 	);
 
-	const [results] = await new HubMessage().execute.call(context);
+	const [results] = await new ZapiOmni().execute.call(context);
 
 	assert.deepEqual(requestedRecipients, ['5511999999999', '5511888888888']);
 	assert.deepEqual(
@@ -1026,7 +1026,7 @@ test('node execute stops on the first invalid item when continue on fail is disa
 	);
 
 	await assert.rejects(
-		() => new HubMessage().execute.call(context),
+		() => new ZapiOmni().execute.call(context),
 		(error) => error?.constructor?.name === 'NodeOperationError' && error.context?.itemIndex === 0,
 	);
 	assert.equal(requestCount, 0);
@@ -1058,7 +1058,7 @@ test('test context resolves every node parameter against its item index', async 
 	);
 
 	await executeMessage.call(context, 1, 'sendText');
-	assert.equal(capturedOptions.url, 'https://api.hubmessage.io/v1/channels/channel-two/messages');
+	assert.equal(capturedOptions.url, 'https://api.omni.z-api.io/v1/channels/channel-two/messages');
 	assert.equal(capturedOptions.body.recipient.identifier, '5522222222222');
 	assert.equal(capturedOptions.body.content.body.message, 'Second');
 });
@@ -1326,7 +1326,7 @@ test('Send Template ignores removed visual fields and sends Components JSON', as
 test('Send Interactive Action maps URL and CALL buttons', async () => {
 	let capturedOptions;
 	const buttons = [
-		{ id: '1', title: 'Website', name: 'URL', url: 'https://www.hubmessage.io' },
+		{ id: '1', title: 'Website', name: 'URL', url: 'https://omni.z-api.io' },
 		{ id: '2', title: 'Call us', name: 'CALL', phones: ['5511999999999'] },
 	];
 	const context = createContext(
@@ -1337,7 +1337,7 @@ test('Send Interactive Action maps URL and CALL buttons', async () => {
 				recipient: '5511999999999',
 				interactiveMessage: 'How can we help?',
 				interactiveActionOptions: {
-					header: 'HubMessage',
+					header: 'ZapiOmni',
 					footer: 'Choose an option',
 				},
 				actionButtonsInputMode: 'json',
@@ -1353,7 +1353,7 @@ test('Send Interactive Action maps URL and CALL buttons', async () => {
 	assert.deepEqual(capturedOptions.body.content, {
 		type: 'INTERACTIVE_ACTION',
 		body: { message: 'How can we help?' },
-		header: { message: 'HubMessage' },
+		header: { message: 'ZapiOmni' },
 		footer: { message: 'Choose an option' },
 		attachments: buttons,
 	});
@@ -1362,7 +1362,7 @@ test('Send Interactive Action maps URL and CALL buttons', async () => {
 test('Send Interactive Action maps visual URL and CALL button fields', async () => {
 	let capturedOptions;
 	const buttons = [
-		{ id: '1', title: 'Website', name: 'URL', url: 'https://www.hubmessage.io' },
+		{ id: '1', title: 'Website', name: 'URL', url: 'https://omni.z-api.io' },
 		{ id: '2', title: 'Call us', name: 'CALL', phones: ['5511999999999'] },
 	];
 	const context = createContext(
@@ -1373,7 +1373,7 @@ test('Send Interactive Action maps visual URL and CALL button fields', async () 
 				recipient: '5511999999999',
 				interactiveMessage: 'How can we help?',
 				interactiveActionOptions: {
-					header: 'HubMessage',
+					header: 'ZapiOmni',
 					footer: 'Choose an option',
 				},
 			actionButtonsInputMode: 'fields',
@@ -1383,7 +1383,7 @@ test('Send Interactive Action maps visual URL and CALL button fields', async () 
 						id: '1',
 						title: 'Website',
 						actionType: 'URL',
-						url: 'https://www.hubmessage.io',
+						url: 'https://omni.z-api.io',
 					},
 					{
 						id: '2',
@@ -1404,7 +1404,7 @@ test('Send Interactive Action maps visual URL and CALL button fields', async () 
 	assert.deepEqual(capturedOptions.body.content, {
 		type: 'INTERACTIVE_ACTION',
 		body: { message: 'How can we help?' },
-		header: { message: 'HubMessage' },
+		header: { message: 'ZapiOmni' },
 		footer: { message: 'Choose an option' },
 		attachments: buttons,
 	});

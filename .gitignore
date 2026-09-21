@@ -14,4 +14,4 @@ npm-debug.log*
 
 # Local development references and test workflows
 docs/
-workflows/hubmessage-template-visual-tests.json
+workflows/zapi-omni-template-visual-tests.json

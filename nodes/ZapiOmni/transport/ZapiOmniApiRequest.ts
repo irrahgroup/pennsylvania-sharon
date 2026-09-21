@@ -8,8 +8,8 @@ import type {
 } from 'n8n-workflow';
 import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 
-const DEFAULT_BASE_URL = 'https://api.hubmessage.io';
-type HubMessageRequestContext = IExecuteFunctions | ILoadOptionsFunctions;
+const DEFAULT_BASE_URL = 'https://api.omni.z-api.io';
+type ZapiOmniRequestContext = IExecuteFunctions | ILoadOptionsFunctions;
 
 function normalizeBaseUrl(value: unknown): string {
 	const baseUrl = String(value ?? DEFAULT_BASE_URL)
@@ -23,15 +23,15 @@ function normalizeBaseUrl(value: unknown): string {
 	return baseUrl;
 }
 
-export async function hubMessageApiRequest<T = IDataObject>(
-	this: HubMessageRequestContext,
+export async function zapiOmniApiRequest<T = IDataObject>(
+	this: ZapiOmniRequestContext,
 	method: IHttpRequestMethods,
 	endpoint: string,
 	itemIndex: number,
 	body?: IDataObject,
 	query?: IDataObject,
 ): Promise<T> {
-	const credentials = await this.getCredentials('hubMessageApi');
+	const credentials = await this.getCredentials('zapiOmniApi');
 
 	let baseUrl: string;
 	try {
@@ -64,7 +64,7 @@ export async function hubMessageApiRequest<T = IDataObject>(
 	try {
 		return (await this.helpers.httpRequestWithAuthentication.call(
 			this,
-			'hubMessageApi',
+			'zapiOmniApi',
 			options,
 		)) as T;
 	} catch (error: unknown) {

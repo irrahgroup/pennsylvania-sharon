@@ -6,26 +6,23 @@ import type {
 	Icon,
 } from 'n8n-workflow';
 
-export class HubMessageApi implements ICredentialType {
-	name = 'hubMessageApi';
+export class ZapiOmniApi implements ICredentialType {
+	name = 'zapiOmniApi';
 
-	displayName = 'HubMessage API';
+	displayName = 'Z-API Omni API';
 
-	documentationUrl = 'https://developer.hubmessage.io/authentication';
+	documentationUrl = 'https://developer.omni.z-api.io/authentication';
 
-	icon: Icon = {
-		light: 'file:../icons/hubmessage.svg',
-		dark: 'file:../icons/hubmessage.dark.svg',
-	};
+	icon: Icon = 'file:../icons/zapi-omni.svg';
 
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Base URL',
 			name: 'baseUrl',
 			type: 'string',
-			default: 'https://api.hubmessage.io',
+			default: 'https://api.omni.z-api.io',
 			required: true,
-			description: 'Official HubMessage production API base URL',
+			description: 'Official Z-API Omni production API base URL',
 		},
 		{
 			displayName: 'Secret Key',
@@ -36,7 +33,7 @@ export class HubMessageApi implements ICredentialType {
 			},
 			default: '',
 			required: true,
-			description: 'Secret Key generated in the HubMessage Security panel',
+			description: 'Secret Key generated in the Z-API Omni Security panel',
 		},
 	];
 
